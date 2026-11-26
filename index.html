@@ -1,12 +1,97 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kelas Bu Sustri</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belajar Campuran | IPA Kimia Kelas VIII</title>
+<style>
+:root{--navy:#13294b;--blue:#2563eb;--cyan:#06b6d4;--ink:#172033;--muted:#64748b;--paper:#f4f7fb;--white:#fff;--green:#16a34a;--orange:#f59e0b}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:var(--ink)}
+header{background:linear-gradient(120deg,var(--navy),#1d4ed8);color:white;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{font-size:clamp(20px,3vw,28px);margin:0}header small{opacity:.85}
+nav{display:flex;gap:8px;flex-wrap:wrap}button{border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer;transition:.2s}
+nav button{background:#ffffff20;color:white}nav button.active,nav button:hover{background:white;color:var(--navy)}
+main{max-width:1050px;margin:28px auto;padding:0 18px}.panel{display:none;background:white;border-radius:20px;padding:clamp(20px,4vw,42px);box-shadow:0 12px 35px #0f172a12;min-height:430px}.panel.active{display:block}
+.kicker{color:var(--blue);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;font-size:12px}
+h2{font-size:clamp(26px,4vw,38px);color:var(--navy);margin:10px 0 18px}h3{color:var(--navy);margin-top:24px}
+p,li{font-size:17px;line-height:1.65}.lead{font-size:20px;color:#475569;max-width:780px}
+.hero{background:linear-gradient(135deg,#dbeafe,#cffafe);border-radius:18px;padding:25px;margin:22px 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:20px 0}
+.card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:15px;padding:18px}.card strong{display:block;color:var(--blue);font-size:18px;margin-bottom:8px}
+.pill{display:inline-block;background:#dbeafe;color:#1e40af;padding:6px 10px;border-radius:30px;font-size:13px;font-weight:bold}
+.controls{display:flex;justify-content:space-between;gap:10px;margin-top:28px;flex-wrap:wrap}.primary{background:var(--blue);color:white}.secondary{background:#e2e8f0;color:#1e293b}.primary:hover{background:#1d4ed8}
+.slide-count{color:var(--muted);font-weight:bold}.progress{height:8px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin:12px 0 22px}.progress span{display:block;height:100%;background:var(--cyan);width:0;transition:.25s}
+.question{font-size:20px;font-weight:700;line-height:1.5;margin:22px 0}.option{display:block;width:100%;text-align:left;background:#f8fafc;border:2px solid #e2e8f0;margin:10px 0;padding:14px 16px;border-radius:12px;font-size:16px;color:var(--ink)}.option:hover{border-color:var(--blue)}.option.selected{border-color:var(--blue);background:#eff6ff}.option.correct{border-color:var(--green);background:#f0fdf4}.option.wrong{border-color:#dc2626;background:#fef2f2}
+.feedback{padding:14px;border-radius:12px;background:#f1f5f9;margin-top:14px;line-height:1.55}.hidden{display:none!important}
+footer{text-align:center;color:var(--muted);padding:20px;font-size:13px}
+@media(max-width:600px){header{align-items:flex-start}nav{width:100%}nav button{flex:1;padding:10px 7px}.panel{min-height:0}}
+</style>
 </head>
 <body>
-  <h1>Selamat datang!</h1>
-  <p>Website kelas Kimia.</p>
+<header>
+ <div><h1>Jelajah Dunia Campuran</h1><small>IPA Kimia SMP Kelas VIII • Materi, presentasi, dan kuis</small></div>
+ <nav>
+  <button class="active" data-tab="materi">Materi PPT</button>
+  <button data-tab="kuis">Kuis</button>
+ </nav>
+</header>
+<main>
+<section id="materi" class="panel active">
+ <div class="kicker">Presentasi interaktif</div>
+ <div class="progress"><span id="bar"></span></div>
+ <div id="slide"></div>
+ <div class="controls">
+  <button class="secondary" id="prev">← Sebelumnya</button>
+  <span class="slide-count" id="count"></span>
+  <button class="primary" id="next">Berikutnya →</button>
+ </div>
+</section>
+<section id="kuis" class="panel">
+ <div class="kicker">Uji pemahaman</div>
+ <h2>Kuis Campuran</h2>
+ <p class="lead">Jawablah 10 pertanyaan berikut. Pilih satu jawaban yang paling tepat, lalu periksa hasilnya.</p>
+ <div class="progress"><span id="quizbar"></span></div>
+ <div id="quizarea"></div>
+ <div class="controls">
+  <button class="secondary" id="qprev">← Sebelumnya</button>
+  <span class="slide-count" id="qcount"></span>
+  <button class="primary" id="qnext">Berikutnya →</button>
+ </div>
+ <div id="result" class="hero hidden"></div>
+</section>
+</main>
+<footer>Media pembelajaran IPA Kimia • Dapat digunakan secara offline setelah file disimpan</footer>
+<script>
+const slides=[
+{tag:"01 • Pengantar",title:"Apa Itu Campuran?",body:`<div class="hero"><h3>Campuran adalah gabungan dua zat atau lebih yang bercampur secara fisika tanpa membentuk zat baru.</h3><p>Setiap zat penyusun campuran masih memiliki sifat asalnya dan dapat dipisahkan dengan cara fisika.</p></div><div class="cards"><div class="card"><strong>Contoh</strong>Air gula, air garam, udara, tanah, dan pasir dalam air.</div><div class="card"><strong>Ciri utama</strong>Komposisi dapat berubah-ubah dan tidak memiliki rumus kimia tetap.</div></div>`},
+{tag:"02 • Klasifikasi",title:"Dua Jenis Campuran",body:`<div class="cards"><div class="card"><strong>Campuran homogen</strong>Komposisinya seragam dan tampak sebagai satu fase. Contoh: air garam dan udara.</div><div class="card"><strong>Campuran heterogen</strong>Komposisinya tidak seragam; bagian penyusunnya masih dapat dibedakan. Contoh: minyak dan air, pasir dan air.</div></div><h3>Ingat!</h3><p>Homogen bukan berarti hanya terdiri atas satu zat. Campuran homogen tetap tersusun atas lebih dari satu zat.</p>`},
+{tag:"03 • Larutan",title:"Larutan: Campuran Homogen",body:`<p>Larutan adalah campuran homogen yang terdiri atas <b>pelarut</b> dan <b>zat terlarut</b>.</p><div class="cards"><div class="card"><strong>Pelarut</strong>Zat yang melarutkan, biasanya jumlahnya lebih banyak. Contoh: air pada air gula.</div><div class="card"><strong>Zat terlarut</strong>Zat yang dilarutkan. Contoh: gula atau garam.</div></div><div class="hero"><b>Contoh sehari-hari:</b> air gula, air garam, cuka makan, dan udara.</div>`},
+{tag:"04 • Perbandingan",title:"Koloid dan Suspensi",body:`<div class="cards"><div class="card"><strong>Koloid</strong>Ukuran partikel berada di antara larutan dan suspensi. Tampak relatif merata, tidak mudah mengendap, dan dapat menghamburkan cahaya (efek Tyndall). Contoh: susu, santan, kabut.</div><div class="card"><strong>Suspensi</strong>Campuran heterogen dengan partikel cukup besar, dapat mengendap jika didiamkan, dan dapat dipisahkan dengan penyaringan. Contoh: pasir dalam air, tepung dalam air.</div></div><p><b>Perhatikan:</b> susu tampak homogen, tetapi secara ilmiah termasuk koloid.</p>`},
+{tag:"05 • Pemisahan",title:"Cara Memisahkan Campuran",body:`<div class="cards"><div class="card"><strong>Filtrasi</strong>Penyaringan untuk memisahkan padatan tak larut dari cairan. Contoh: pasir dan air.</div><div class="card"><strong>Penguapan</strong>Menguapkan pelarut untuk memperoleh zat terlarut. Contoh: pembuatan garam.</div><div class="card"><strong>Distilasi</strong>Memisahkan zat berdasarkan perbedaan titik didih. Contoh: penyulingan air.</div><div class="card"><strong>Magnetisasi</strong>Memisahkan bahan magnetis dari yang tidak magnetis. Contoh: serbuk besi dan pasir.</div><div class="card"><strong>Kromatografi</strong>Memisahkan komponen berdasarkan perbedaan kecepatan merambat. Contoh: warna tinta.</div><div class="card"><strong>Dekantasi</strong>Menuangkan cairan secara hati-hati setelah padatan mengendap. Contoh: air dan pasir.</div></div>`},
+{tag:"06 • Penerapan",title:"Campuran di Sekitar Kita",body:`<ul><li>Air minum: dapat mengandung mineral terlarut.</li><li>Udara: campuran berbagai gas.</li><li>Tanah: campuran mineral, bahan organik, air, dan udara.</li><li>Susu: contoh campuran koloid.</li><li>Air sungai keruh: dapat mengandung partikel tersuspensi.</li></ul><div class="hero"><h3>Diskusikan!</h3><p>Bagaimana cara memperoleh garam dari air laut? Mengapa penyaringan biasa tidak dapat memisahkan garam yang sudah larut dalam air?</p></div>`},
+{tag:"07 • Rangkuman",title:"Rangkuman Pembelajaran",body:`<ol><li>Campuran tersusun atas dua zat atau lebih tanpa membentuk zat baru.</li><li>Campuran dibedakan menjadi homogen dan heterogen.</li><li>Larutan merupakan campuran homogen; koloid dan suspensi memiliki karakteristik partikel berbeda.</li><li>Pemisahan campuran dapat dilakukan dengan filtrasi, penguapan, distilasi, magnetisasi, kromatografi, dan dekantasi.</li></ol><div class="hero"><h3>Siap menguji pemahaman?</h3><p>Klik menu <b>Kuis</b> di bagian atas dan kerjakan 10 soal.</p></div>`}
+];
+let si=0;
+function renderSlide(){const s=slides[si];document.getElementById('slide').innerHTML=`<div class="kicker">${s.tag}</div><h2>${s.title}</h2>${s.body}`;document.getElementById('count').textContent=`Slide ${si+1} dari ${slides.length}`;document.getElementById('bar').style.width=((si+1)/slides.length*100)+'%';document.getElementById('prev').disabled=si===0;document.getElementById('next').textContent=si===slides.length-1?'Kembali ke awal ↺':'Berikutnya →'}
+document.getElementById('prev').onclick=()=>{si=Math.max(0,si-1);renderSlide()};document.getElementById('next').onclick=()=>{si=si===slides.length-1?0:si+1;renderSlide()};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')});
+const questions=[
+{q:"Campuran yang memiliki komposisi seragam di setiap bagiannya disebut ....",o:["Campuran heterogen","Campuran homogen","Suspensi","Unsur"],a:1,e:"Campuran homogen memiliki komposisi seragam dan tampak sebagai satu fase."},
+{q:"Air garam termasuk campuran ....",o:["Homogen","Heterogen","Suspensi","Unsur"],a:0,e:"Garam larut merata dalam air sehingga membentuk larutan homogen."},
+{q:"Campuran pasir dan air paling tepat dipisahkan dengan ....",o:["Distilasi","Kromatografi","Filtrasi","Penguapan"],a:2,e:"Filtrasi menyaring padatan yang tidak larut dari cairan."},
+{q:"Zat yang berfungsi melarutkan zat lain dalam larutan disebut ....",o:["Zat terlarut","Pelarut","Endapan","Residu"],a:1,e:"Pelarut merupakan zat yang melarutkan zat terlarut."},
+{q:"Contoh campuran koloid adalah ....",o:["Air gula","Pasir dan air","Susu","Air garam"],a:2,e:"Susu merupakan emulsi, yaitu salah satu jenis koloid."},
+{q:"Pembuatan garam dari air laut memanfaatkan proses ....",o:["Penguapan","Magnetisasi","Filtrasi","Kromatografi"],a:0,e:"Air diuapkan sehingga garam tertinggal dan dapat dikristalkan."},
+{q:"Pemisahan serbuk besi dari pasir dapat menggunakan ....",o:["Kertas saring","Magnet","Corong pisah","Termometer"],a:1,e:"Serbuk besi tertarik magnet, sedangkan pasir tidak."},
+{q:"Campuran yang partikelnya dapat mengendap ketika didiamkan disebut ....",o:["Larutan","Suspensi","Pelarut","Senyawa"],a:1,e:"Partikel suspensi relatif besar sehingga dapat mengendap."},
+{q:"Pemisahan komponen warna pada tinta dapat dilakukan dengan ....",o:["Kromatografi","Filtrasi","Magnetisasi","Dekantasi"],a:0,e:"Kromatografi memisahkan komponen berdasarkan perbedaan kecepatan perambatan."},
+{q:"Penyulingan atau distilasi memanfaatkan perbedaan ....",o:["Warna zat","Massa wadah","Titik didih","Bentuk partikel"],a:2,e:"Distilasi memisahkan komponen berdasarkan perbedaan titik didih."}
+];
+let qi=0,answers=Array(questions.length).fill(null),submitted=false;
+function renderQuiz(){const q=questions[qi];document.getElementById('quizarea').innerHTML=`<div class="slide-count">Pertanyaan ${qi+1} dari ${questions.length}</div><div class="question">${q.q}</div><div id="opts">${q.o.map((v,i)=>`<button class="option ${answers[qi]===i?'selected':''}" data-i="${i}">${String.fromCharCode(65+i)}. ${v}</button>`).join('')}</div><div id="fb" class="feedback ${submitted?'':'hidden'}">${answers[qi]===q.a?'✓ Tepat! ':'✗ Belum tepat. '}${q.e}</div>`;document.querySelectorAll('.option').forEach(b=>b.onclick=()=>{if(submitted)return;answers[qi]=Number(b.dataset.i);renderQuiz()});document.getElementById('qcount').textContent=`${qi+1}/${questions.length}`;document.getElementById('quizbar').style.width=((qi+1)/questions.length*100)+'%';document.getElementById('qprev').disabled=qi===0;document.getElementById('qnext').textContent=qi===questions.length-1?(submitted?'Ulangi kuis':'Periksa nilai'):'Berikutnya →';document.getElementById('result').classList.add('hidden')}
+document.getElementById('qprev').onclick=()=>{qi=Math.max(0,qi-1);renderQuiz()};
+document.getElementById('qnext').onclick=()=>{if(qi<questions.length-1){qi++;renderQuiz();return}if(!submitted){if(answers.some(x=>x===null)){alert('Jawab semua pertanyaan terlebih dahulu.');return}submitted=true;const score=answers.filter((x,i)=>x===questions[i].a).length;renderQuiz();const r=document.getElementById('result');r.classList.remove('hidden');r.innerHTML=`<h3>Hasil Kuis</h3><div style="font-size:34px;font-weight:800;color:#1d4ed8">${score*10}/100</div><p>Jawaban benar: ${score} dari ${questions.length} soal.</p><p>${score>=8?'Hebat! Pemahamanmu tentang campuran sangat baik.':score>=6?'Bagus! Pelajari kembali bagian yang belum tepat.':'Tetap semangat! Baca kembali materi, lalu coba lagi.'}</p>`;document.getElementById('qnext').textContent='Ulangi kuis'}else{qi=0;answers=Array(questions.length).fill(null);submitted=false;renderQuiz()}};
+renderSlide();renderQuiz();
+</script>
 </body>
 </html>
